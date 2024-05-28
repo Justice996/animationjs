@@ -1,3 +1,10 @@
+let playerStatus = '眩晕'
+const dropDown = document.getElementById('animations');
+
+dropDown.addEventListener('change',(e)=>{
+ playerStatus=e.target.value;
+})
+
 const canvas = document.getElementById('mycanvas');
 const ctx = canvas.getContext('2d');
 const CANVAS_WIDTH=canvas.width=600;
@@ -8,8 +15,69 @@ let y=0;
 
 const spriteWidth = 575;
 const spriteHeight = 523;
-let frameX = 0;
-let frameY = 0;
+
+
+
+// 调节帧率
+let gameFrame = 0;
+const staggerFrames=5; //数值越小帧率越高
+
+//保存每一行的动作
+const spriteAnimations = [];
+const animationStates = [
+ {
+  name:'空闲',
+  frames:7
+ },
+ {
+  name:'跳',
+  frames: 7
+ },
+ {
+  name:'落地',
+  frames:9
+ },
+ {
+  name:'跑',
+  frames:9
+ },
+ {
+  name:'眩晕',
+  frames:11
+ },
+ {
+  name:'坐',
+  frames:5
+ },
+ {
+  name:'滚',
+  frames:7
+ },
+ {
+  name:'咬死你',
+  frames:7
+ },
+ {
+  name:'死了',
+  frames:12
+ },
+ {
+  name:'被揍了',
+  frames:4
+ },
+];
+animationStates.forEach((state,index)=>{
+ let frames = {
+  loc: [],
+ };
+ for (let j = 0; j < state.frames; j++) {
+     let positionX = j * spriteWidth;
+     let positionY = index * spriteHeight;
+     frames.loc.push({x:positionX,y:positionY});
+ }
+ spriteAnimations[state.name] = frames;
+})
+console.log(spriteAnimations);
 // let x1=500;
 // let y1=0;
 //
@@ -21,9 +89,15 @@ let frameY = 0;
 const playerImage = new Image();
 playerImage.src = './img/dogs.png'
 function animate(){
- ctx.clearRect(0,0,CANVAS_WIDTH,CANVAS_HIGHT)
-ctx.drawImage(playerImage,spriteWidth*frameX,spriteHeight*frameY,spriteWidth,spriteHeight,0,0,spriteWidth,spriteHeight)
- frameX<6?frameX++:frameX=0;
+ ctx.clearRect(0,0,CANVAS_WIDTH,CANVAS_HIGHT);
+ let position = Math.floor(gameFrame/staggerFrames)% spriteAnimations[playerStatus].loc.length;
+ let frameX = spriteWidth *position;
+ let frameY = spriteAnimations[playerStatus].loc[position].y;
+ctx.drawImage(playerImage,frameX,frameY,spriteWidth,spriteHeight,0,0,spriteWidth,spriteHeight)
+ if(gameFrame%staggerFrames===0){
+  frameX<6?frameX++:frameX=0;
+ }
+ gameFrame++
  requestAnimationFrame(animate)
 }
 animate();
