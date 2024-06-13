@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="ch">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>圆形碰撞检测</title>
+</head>
+<body>
+
+<script>
+    //通过计算两个圆心之间的连线距离小于两圆半径合就可以计算
+    const circle1 ={x:100,y:100,radius:100};
+    const circle2 ={x:150,y:150,radius:100};
+
+    let dx = circle1.x-circle2.x;
+    let dy = circle1.y - circle2.y;
+    let sumOfRadii=  Math.sqrt(dx*dx+dy*dy);
+    if(sumOfRadii>circle1.radius+circle2.radius){
+        alert('没有碰撞')
+    }else if(sumOfRadii===circle1.radius+circle2.radius){
+        alert('相切了！')
+    }else{
+        alert('碰撞了')
+    }
+</script>
+</body>
+</html>
